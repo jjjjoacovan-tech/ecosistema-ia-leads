@@ -124,26 +124,31 @@ La matriz completa de selección de modelo por tarea está en la documentación 
 
 ## Dashboards
 
-- **[KPIs del pipeline](https://airtable.com/appyCPtzRP0Ytcz96/shrHv6UqLgeaJRQFc)** — leads agrupados por estado, con conteo por etapa del embudo
-- **[Tasa de errores](https://airtable.com/appyCPtzRP0Ytcz96/shrgFPdpgORH1XBh8)** — eventos agrupados por tipo, separando fallos técnicos de decisiones humanas
+- **[KPIs del pipeline](https://airtable.com/appyCPtzRP0Ytcz96/shrgFPdpgORH1XBh8)** — leads agrupados por estado, con conteo por etapa del embudo
+- **[Tasa de errores](https://airtable.com/appyCPtzRP0Ytcz96/shrHv6UqLgeaJRQFc)** — eventos agrupados por tipo, separando fallos técnicos de decisiones humanas
 
 ---
 
 ## Contenido del repositorio
 
 ```
-├── README.md                      Este archivo
-├── DOCUMENTACION_TECNICA.pdf      Los cuatro documentos unificados (13 páginas)
-├── docs/
-│   ├── 01_Mapa_de_Arquitectura.pdf
-│   ├── 02_Manual_de_Datos.pdf
-│   ├── 03_Matriz_de_Costos.pdf
-│   └── 04_Seguridad_y_Resiliencia.pdf
+├── README.md                           Este archivo
+├── DOCUMENTACION_TECNICA.pdf           Los cuatro documentos unificados, con portada
+├── 01_Mapa_de_Arquitectura.pdf         Criterio 1
+├── 02_Manual_de_Datos.pdf              Criterio 2
+├── 03_Matriz_de_Costos.pdf             Criterio 3
+├── 04_Seguridad_y_Resiliencia.pdf      Criterio 4
 ├── blueprints/
-│   ├── escenario_1_clasificacion.json
-│   └── escenario_2_envio_hitl.json
+│   ├── escenario_1_clasificacion.json  Lógica completa del flujo de clasificación
+│   └── escenario_2_envio_hitl.json     Lógica del flujo de envío tras aprobación
 └── screenshots/
-    └── (evidencias de ejecución)
+    ├── 01_escenario_clasificacion.png  Flujo completo con las tres rutas de error
+    ├── 02_escenario_hitl.png           Escenario de envío tras validación humana
+    ├── 03_slack_variables_dinamicas.png  Mapeo dinámico, sin datos hardcodeados
+    ├── 04_log_error_handlers.png       Error Handlers registrando fallos reales
+    ├── 05_tabla_leads.png              Tabla agrupada por estado
+    ├── 06_historial_ejecuciones.png    Consumo por corrida: 18 → 7 operaciones
+    └── 07_dashboard_errores.png        Vista pública, verificada sin sesión
 ```
 
 ---
