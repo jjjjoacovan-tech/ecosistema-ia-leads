@@ -4,6 +4,8 @@
 
 Sistema de automatización que recibe consultas comerciales, las clasifica con un modelo de lenguaje usando el catálogo real de servicios como fuente de verdad, redacta un borrador de respuesta y **se detiene a esperar aprobación humana** antes de contactar al cliente.
 
+Todo el recorrido de un lead —la solicitud de aprobación con el borrador propuesto y la respuesta efectivamente enviada— queda en el mismo canal de Slack, de modo que para cada consulta se puede auditar qué propuso la IA y qué decidió la persona sin cruzar dos sistemas.
+
 ---
 
 ## El problema que resuelve
@@ -50,7 +52,7 @@ Formulario web
               ║   revisa y aprueba    ║
               ╚═══════════╤═══════════╝
                           ▼
-              Gmail: enviar respuesta ──► Estado: Enviado ──► Log de éxito
+              Slack: enviar respuesta ──► Estado: Enviado ──► Log de éxito
 ```
 
 ### Las cuatro categorías tecnológicas
@@ -60,7 +62,7 @@ Formulario web
 | Orquestador | Make.com | Dos escenarios encadenados por estado, no por llamada directa |
 | Base de datos | Airtable | Tres tablas vinculadas: memoria, catálogo y bitácora |
 | Procesamiento IA | Google Gemini (API HTTP) | Clasifica, puntúa y redacta con contexto recuperado (RAG) |
-| Canal de salida | Slack + Gmail | Slack valida internamente, Gmail contacta al lead |
+| Canal de salida | Slack | Un solo canal concentra la validación y la respuesta al lead |
 
 ---
 
@@ -99,7 +101,7 @@ Cuatro Error Handlers activos. La regla que los ordena: **se corta cuando contin
 | Registrar lead en Airtable | `Break` | Registra el error y detiene: sin ID no hay nada que actualizar |
 | Motor de IA | `Break` | Marca el lead como Error y detiene para reproceso manual |
 | Notificación a Slack | `Resume` | Registra y continúa: el lead sigue visible en Airtable |
-| Envío por Gmail | `Break` | Revierte a Error antes de marcar como Enviado |
+| Envío de la respuesta | `Break` | Revierte a Error antes de marcar como Enviado |
 
 Los Error Handlers fueron verificados en producción: durante las pruebas del 18/08/2026 el módulo de IA falló de forma sostenida y el sistema se comportó como estaba diseñado — el lead se guardó completo, el fallo quedó registrado con módulo y detalle, y **ningún mensaje se envió por error**.
 
@@ -148,7 +150,9 @@ La matriz completa de selección de modelo por tarea está en la documentación 
     ├── 04_log_error_handlers.png       Error Handlers registrando fallos reales
     ├── 05_tabla_leads.png              Tabla agrupada por estado
     ├── 06_historial_ejecuciones.png    Consumo por corrida: 18 → 7 operaciones
-    └── 07_dashboard_errores.png        Vista pública, verificada sin sesión
+    ├── 07_dashboard_errores.png        Vista pública, verificada sin sesión
+    ├── 09_respuesta_enviada.png        Ciclo cerrado: respuesta publicada tras la aprobación
+    └── 10_ciclo_completo.png           Lead en estado Enviado con su marca de tiempo
 ```
 
 ---
