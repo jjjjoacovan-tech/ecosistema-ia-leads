@@ -1,0 +1,525 @@
+{
+    "name": "PF — 2. Envio tras Aprobacion Humana (HITL)",
+    "flow": [
+        {
+            "id": 1,
+            "module": "airtable:TriggerWatchRecords",
+            "version": 3,
+            "parameters": {
+                "base": "appyCPtzRP0Ytcz96",
+                "view": "viwCgkcPUdpJD3hPE",
+                "table": "tblIVrXXBmktXX5Ld",
+                "config": {
+                    "labelField": "Nombre",
+                    "triggerField": "Ultima Modificacion"
+                },
+                "formula": "",
+                "maxRecords": 2,
+                "__IMTCONN__": 10478862,
+                "useColumnId": false
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "base": {
+                            "label": "Proyecto Final - Ecosistema IA Leads"
+                        },
+                        "view": {
+                            "label": "Grid view"
+                        },
+                        "table": {
+                            "label": "Leads"
+                        },
+                        "config": {
+                            "nested": {
+                                "labelField": {
+                                    "label": "Nombre"
+                                },
+                                "triggerField": {
+                                    "label": "Ultima Modificacion"
+                                }
+                            }
+                        },
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "airtable2"
+                            },
+                            "label": "Airtable Proyecto Final"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:airtable3,airtable2",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "base",
+                        "type": "select",
+                        "label": "Base",
+                        "required": true
+                    },
+                    {
+                        "name": "useColumnId",
+                        "type": "boolean",
+                        "label": "Use Column ID",
+                        "required": true
+                    },
+                    {
+                        "name": "table",
+                        "type": "select",
+                        "label": "Table",
+                        "required": true
+                    },
+                    {
+                        "name": "config",
+                        "spec": [
+                            {
+                                "name": "triggerField",
+                                "type": "select",
+                                "label": "Trigger field",
+                                "required": true
+                            },
+                            {
+                                "name": "triggerField",
+                                "type": "hidden"
+                            },
+                            {
+                                "name": "labelField",
+                                "type": "select",
+                                "label": "Label field",
+                                "required": true
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Trigger configuration"
+                    },
+                    {
+                        "name": "maxRecords",
+                        "type": "integer",
+                        "label": "Limit",
+                        "required": true
+                    },
+                    {
+                        "name": "view",
+                        "type": "select",
+                        "label": "View"
+                    },
+                    {
+                        "name": "formula",
+                        "type": "text",
+                        "label": "Formula"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "ID"
+                    },
+                    {
+                        "name": "createdTime",
+                        "type": "date",
+                        "label": "Created Time"
+                    },
+                    {
+                        "name": "Nombre",
+                        "type": "text",
+                        "label": "Nombre"
+                    },
+                    {
+                        "name": "Email",
+                        "type": "text",
+                        "label": "Email"
+                    },
+                    {
+                        "name": "Empresa",
+                        "type": "text",
+                        "label": "Empresa"
+                    },
+                    {
+                        "name": "Mensaje Original",
+                        "type": "text",
+                        "label": "Mensaje Original",
+                        "multiline": true
+                    },
+                    {
+                        "name": "Canal de Origen",
+                        "type": "text",
+                        "label": "Canal de Origen"
+                    },
+                    {
+                        "name": "Categoria IA",
+                        "type": "text",
+                        "label": "Categoria IA"
+                    },
+                    {
+                        "name": "Score IA",
+                        "type": "number",
+                        "label": "Score IA"
+                    },
+                    {
+                        "name": "Justificacion IA",
+                        "type": "text",
+                        "label": "Justificacion IA",
+                        "multiline": true
+                    },
+                    {
+                        "name": "Respuesta Redactada",
+                        "type": "text",
+                        "label": "Respuesta Redactada",
+                        "multiline": true
+                    },
+                    {
+                        "name": "Estado",
+                        "type": "text",
+                        "label": "Estado"
+                    },
+                    {
+                        "name": "Aprobado por",
+                        "type": "text",
+                        "label": "Aprobado por"
+                    },
+                    {
+                        "name": "Fecha Ingreso",
+                        "time": true,
+                        "type": "date",
+                        "label": "Fecha Ingreso"
+                    },
+                    {
+                        "name": "Fecha Envio",
+                        "time": true,
+                        "type": "date",
+                        "label": "Fecha Envio"
+                    },
+                    {
+                        "name": "Thread ID Gmail",
+                        "type": "text",
+                        "label": "Thread ID Gmail"
+                    },
+                    {
+                        "name": "Servicio de Interes",
+                        "spec": {
+                            "label": "Record ID"
+                        },
+                        "type": "array",
+                        "label": "Servicio de Interes"
+                    },
+                    {
+                        "name": "Eventos",
+                        "spec": {
+                            "label": "Record ID"
+                        },
+                        "type": "array",
+                        "label": "Eventos"
+                    },
+                    {
+                        "name": "Ultima Modificacion",
+                        "type": "text",
+                        "label": "Ultima Modificacion"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "slack:CreateMessage",
+            "version": 4,
+            "parameters": {
+                "__IMTCONN__": 10479040
+            },
+            "filter": {
+                "name": "Solo aprobados y aprobados por humano",
+                "conditions": [
+                    [
+                        {
+                            "a": "{{1.Estado}}",
+                            "o": "text:equal",
+                            "b": "Aprobado por Humano"
+                        },
+                        {
+                            "a": "{{1.`Categoria IA`}}",
+                            "o": "exist"
+                        }
+                    ]
+                ]
+            },
+            "mapper": {
+                "text": "*RESPUESTA ENVIADA AL LEAD*\n\n*Para:* {{1.Nombre}} <{{1.Email}}>\n*Empresa:* {{1.Empresa}}\n*Categoria:* {{1.`Categoria IA`}}  |  *Score:* {{1.`Score IA`}}/100\n\n*Mensaje enviado:*\n> {{1.`Respuesta Redactada`}}\n\n_Aprobado por un humano antes del envio. Registro: https://airtable.com/appyCPtzRP0Ytcz96/tblIVrXXBmktXX5Ld/{{1.id}}_",
+                "parse": false,
+                "mrkdwn": true,
+                "channel": "C0BQMGV4WDB",
+                "channelWType": "manualy"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "parse": {
+                            "mode": "chose"
+                        },
+                        "mrkdwn": {
+                            "mode": "chose"
+                        },
+                        "link_names": {
+                            "mode": "chose"
+                        },
+                        "channelWType": {
+                            "label": "Enter manually"
+                        },
+                        "unfurl_links": {
+                            "mode": "chose"
+                        },
+                        "unfurl_media": {
+                            "mode": "chose"
+                        },
+                        "reply_broadcast": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "slack2"
+                            },
+                            "label": "Joaquin's Slack (user) connection (joaquin-f1b8379.slack.com - jjjjoacovan)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:slack2,slack3",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "channelWType",
+                        "type": "select",
+                        "label": "Enter a channel ID or name",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "manualy",
+                                "list"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text"
+                    },
+                    {
+                        "name": "blocks",
+                        "type": "text",
+                        "label": "Blocks"
+                    },
+                    {
+                        "name": "thread_ts",
+                        "type": "text",
+                        "label": "Thread message ID (time stamp)"
+                    },
+                    {
+                        "name": "reply_broadcast",
+                        "type": "boolean",
+                        "label": "Reply broadcast"
+                    },
+                    {
+                        "name": "link_names",
+                        "type": "boolean",
+                        "label": "Link names"
+                    },
+                    {
+                        "name": "parse",
+                        "type": "boolean",
+                        "label": "Parse message text"
+                    },
+                    {
+                        "name": "mrkdwn",
+                        "type": "boolean",
+                        "label": "Use markdown"
+                    },
+                    {
+                        "name": "unfurl_links",
+                        "type": "boolean",
+                        "label": "Unfurl primarily text-based content"
+                    },
+                    {
+                        "name": "unfurl_media",
+                        "type": "boolean",
+                        "label": "Unfurl media content"
+                    },
+                    {
+                        "name": "icon_emoji",
+                        "type": "text",
+                        "label": "Icon emoji"
+                    },
+                    {
+                        "name": "icon_url",
+                        "type": "url",
+                        "label": "Icon url"
+                    },
+                    {
+                        "name": "username",
+                        "type": "text",
+                        "label": "User name"
+                    },
+                    {
+                        "name": "channel",
+                        "type": "text",
+                        "label": "Channel ID or name",
+                        "required": true
+                    }
+                ]
+            },
+            "onerror": [
+                {
+                    "id": 101,
+                    "module": "airtable:ActionCreateRecord",
+                    "version": 3,
+                    "parameters": {
+                        "base": "appyCPtzRP0Ytcz96",
+                        "table": "tblQGIqpsM1T7nf9w",
+                        "__IMTCONN__": 10478862,
+                        "useColumnId": true
+                    },
+                    "mapper": {
+                        "record": {
+                            "fldGjSduQpvbngzbe": "{{now}}",
+                            "fldJrt4MeOclnzyqF": "Slack - Enviar Respuesta",
+                            "fldcqoyMslPT3w65i": "{{executionId}}",
+                            "fldpUSotZdYEy0jLn": "El canal de salida rechazo el envio de la respuesta aprobada. El lead queda en Error para reintento manual.",
+                            "flduwRSTrPab3EY58": "Error Gmail"
+                        }
+                    },
+                    "metadata": {
+                        "designer": {
+                            "x": 300,
+                            "y": 300
+                        }
+                    }
+                },
+                {
+                    "id": 102,
+                    "module": "airtable:ActionUpdateRecords",
+                    "version": 3,
+                    "parameters": {
+                        "base": "appyCPtzRP0Ytcz96",
+                        "table": "tblIVrXXBmktXX5Ld",
+                        "__IMTCONN__": 10478862,
+                        "useColumnId": true
+                    },
+                    "mapper": {
+                        "id": "{{1.id}}",
+                        "record": {
+                            "fldhr9Q8jr0j6Lz78": "Error"
+                        }
+                    },
+                    "metadata": {
+                        "designer": {
+                            "x": 600,
+                            "y": 300
+                        }
+                    }
+                },
+                {
+                    "id": 103,
+                    "module": "builtin:Break",
+                    "version": 1,
+                    "metadata": {
+                        "designer": {
+                            "x": 900,
+                            "y": 300
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "module": "airtable:ActionUpdateRecords",
+            "version": 3,
+            "parameters": {
+                "base": "appyCPtzRP0Ytcz96",
+                "table": "tblIVrXXBmktXX5Ld",
+                "__IMTCONN__": 10478862,
+                "useColumnId": true
+            },
+            "mapper": {
+                "id": "{{1.id}}",
+                "record": {
+                    "fldhr9Q8jr0j6Lz78": "Enviado",
+                    "fldorOpbyKK5hP2tH": "{{now}}"
+                }
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                }
+            }
+        },
+        {
+            "id": 4,
+            "module": "airtable:ActionCreateRecord",
+            "version": 3,
+            "parameters": {
+                "base": "appyCPtzRP0Ytcz96",
+                "table": "tblQGIqpsM1T7nf9w",
+                "__IMTCONN__": 10478862,
+                "useColumnId": true
+            },
+            "mapper": {
+                "record": {
+                    "fldGjSduQpvbngzbe": "{{now}}",
+                    "fldJrt4MeOclnzyqF": "Escenario 2 - Envio tras aprobacion",
+                    "fldcqoyMslPT3w65i": "{{executionId}}",
+                    "fldpUSotZdYEy0jLn": "Respuesta aprobada por un humano y enviada correctamente al lead.",
+                    "flduwRSTrPab3EY58": "Exito"
+                }
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0
+                }
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": true,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us2.make.com",
+        "notes": []
+    }
+}

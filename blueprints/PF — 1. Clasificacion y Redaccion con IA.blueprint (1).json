@@ -1,0 +1,723 @@
+{
+    "name": "PF — 1. Clasificacion y Redaccion con IA",
+    "flow": [
+        {
+            "id": 1,
+            "module": "gateway:CustomWebHook",
+            "version": 1,
+            "parameters": {
+                "hook": 2705864,
+                "maxResults": 1
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "hook": {
+                            "data": {
+                                "editable": "true"
+                            },
+                            "label": "PF - Formulario de Contacto Web"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 2,
+            "module": "airtable:ActionCreateRecord",
+            "version": 3,
+            "parameters": {
+                "base": "appyCPtzRP0Ytcz96",
+                "table": "tblIVrXXBmktXX5Ld",
+                "__IMTCONN__": 10478862,
+                "useColumnId": true
+            },
+            "filter": {
+                "name": "Filtro Anti-Loop y Datos Minimos",
+                "conditions": [
+                    [
+                        {
+                            "a": "{{1.email}}",
+                            "b": "noreply",
+                            "o": "text:notcontain"
+                        }
+                    ],
+                    [
+                        {
+                            "a": "{{1.email}}",
+                            "b": "no-reply",
+                            "o": "text:notcontain"
+                        }
+                    ],
+                    [
+                        {
+                            "a": "{{1.email}}",
+                            "o": "exist"
+                        }
+                    ],
+                    [
+                        {
+                            "a": "{{1.mensaje}}",
+                            "o": "exist"
+                        }
+                    ]
+                ]
+            },
+            "mapper": {
+                "record": {
+                    "fld46lAvFBjZwyXSJ": "{{1.nombre}}",
+                    "fldEz20xKujVCnUAL": "{{1.mensaje}}",
+                    "fldLSK6uR7FSJeKWA": "{{1.email}}",
+                    "fldZTr45yDHJAsqMg": "{{now}}",
+                    "fldhfK6JRCNRE6ITT": "Formulario Web",
+                    "fldhr9Q8jr0j6Lz78": "Pendiente",
+                    "fldoDRYp1kIdyWHaE": "{{1.empresa}}"
+                }
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "base": {
+                            "label": "Proyecto Final - Ecosistema IA Leads"
+                        },
+                        "table": {
+                            "label": "Leads"
+                        }
+                    }
+                }
+            },
+            "onerror": [
+                {
+                    "id": 101,
+                    "module": "airtable:ActionCreateRecord",
+                    "version": 3,
+                    "parameters": {
+                        "base": "appyCPtzRP0Ytcz96",
+                        "table": "tblQGIqpsM1T7nf9w",
+                        "__IMTCONN__": 10478862,
+                        "useColumnId": true
+                    },
+                    "mapper": {
+                        "record": {
+                            "fldGjSduQpvbngzbe": "{{now}}",
+                            "fldJrt4MeOclnzyqF": "Airtable - Registrar Lead",
+                            "fldcqoyMslPT3w65i": "{{executionId}}",
+                            "fldpUSotZdYEy0jLn": "No se pudo crear el registro del lead entrante.",
+                            "flduwRSTrPab3EY58": "Error Airtable"
+                        }
+                    },
+                    "metadata": {
+                        "designer": {
+                            "x": 300,
+                            "y": 300
+                        }
+                    }
+                },
+                {
+                    "id": 102,
+                    "module": "builtin:Break",
+                    "version": 1,
+                    "metadata": {
+                        "designer": {
+                            "x": 600,
+                            "y": 300
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "module": "airtable:ActionSearchRecords",
+            "version": 3,
+            "parameters": {
+                "base": "appyCPtzRP0Ytcz96",
+                "table": "tbltrVh6G03dy1R0x",
+                "__IMTCONN__": 10478862,
+                "useColumnId": false
+            },
+            "mapper": {
+                "formula": "{Activo} = 1",
+                "maxRecords": 10
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "base": {
+                            "label": "Proyecto Final - Ecosistema IA Leads"
+                        },
+                        "table": {
+                            "label": "Base de Conocimiento"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "id": 11,
+            "module": "util:TextAggregator",
+            "version": 1,
+            "parameters": {
+                "feeder": 3,
+                "rowSeparator": "other",
+                "otherRowSeparator": " ;; "
+            },
+            "mapper": {
+                "value": "{{3.Servicio}} (precio desde USD {{3.Precio Desde}}, entrega {{3.Tiempo de Entrega}}): {{3.Descripcion}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 750,
+                    "y": 0
+                }
+            }
+        },
+        {
+            "id": 4,
+            "module": "http:ActionSendDataAPIKeyAuth",
+            "version": 3,
+            "parameters": {
+                "auth": 208018,
+                "handleErrors": true,
+                "useNewZLibDeCompress": true
+            },
+            "mapper": {
+                "ca": "",
+                "qs": [],
+                "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
+                "data": "{\"contents\":[{\"parts\":[{\"text\":\"Sos el asistente comercial de un estudio de automatizacion. Analiza la consulta entrante y clasificala. HECHOS INNEGABLES, catalogo vigente de servicios, no inventes precios ni plazos que no esten aca: {{11.text}} . CONSULTA RECIBIDA. Nombre: {{1.nombre}}. Email: {{1.email}}. Empresa: {{1.empresa}}. Mensaje: {{1.mensaje}} . CRITERIOS: VIP si menciona presupuesto concreto, urgencia, empresa con equipo o varios servicios, score entre 70 y 100. Estandar si es consulta legitima sin urgencia ni presupuesto, score entre 30 y 69. Descartado si es spam, publicidad, busqueda de empleo o no tiene relacion con los servicios, score entre 0 y 29. La clave categoria debe ser exactamente uno de estos tres valores: VIP, Estandar o Descartado. La clave score debe ser un numero entero. La clave justificacion, dos oraciones explicando la categoria asignada. La clave servicio_sugerido, el nombre exacto de un servicio del catalogo o cadena vacia si ninguno aplica. La clave respuesta, un borrador de email al lead, cordial, en espanol rioplatense, maximo 150 palabras, mencionando solo datos del catalogo.\"}]}],\"generationConfig\":{\"responseMimeType\":\"application/json\",\"responseSchema\":{\"type\":\"OBJECT\",\"properties\":{\"categoria\":{\"type\":\"STRING\"},\"score\":{\"type\":\"INTEGER\"},\"justificacion\":{\"type\":\"STRING\"},\"servicio_sugerido\":{\"type\":\"STRING\"},\"respuesta\":{\"type\":\"STRING\"}},\"required\":[\"categoria\",\"score\",\"justificacion\",\"servicio_sugerido\",\"respuesta\"]},\"temperature\":0.3}}",
+                "gzip": true,
+                "method": "post",
+                "headers": [],
+                "timeout": "",
+                "useMtls": false,
+                "bodyType": "raw",
+                "contentType": "application/json",
+                "serializeUrl": false,
+                "shareCookies": false,
+                "parseResponse": true,
+                "followRedirect": true,
+                "useQuerystring": false,
+                "followAllRedirects": false,
+                "rejectUnauthorized": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "qs": {
+                            "mode": "chose"
+                        },
+                        "method": {
+                            "mode": "chose",
+                            "label": "POST"
+                        },
+                        "headers": {
+                            "mode": "chose"
+                        },
+                        "bodyType": {
+                            "label": "Raw"
+                        },
+                        "contentType": {
+                            "label": "JSON (application/json)"
+                        }
+                    },
+                    "parameters": {
+                        "auth": {
+                            "label": "gemini pf 2 "
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "auth",
+                        "type": "keychain:apikeyauth",
+                        "label": "Credentials",
+                        "required": true
+                    },
+                    {
+                        "name": "handleErrors",
+                        "type": "boolean",
+                        "label": "Evaluate all states as errors (except for 2xx and 3xx )",
+                        "required": true
+                    },
+                    {
+                        "name": "useNewZLibDeCompress",
+                        "type": "hidden"
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "url",
+                        "type": "url",
+                        "label": "URL",
+                        "required": true
+                    },
+                    {
+                        "name": "serializeUrl",
+                        "type": "boolean",
+                        "label": "Serialize URL",
+                        "required": true
+                    },
+                    {
+                        "name": "method",
+                        "type": "select",
+                        "label": "Method",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "get",
+                                "head",
+                                "post",
+                                "put",
+                                "patch",
+                                "delete",
+                                "options"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "headers",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Headers"
+                    },
+                    {
+                        "name": "qs",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "type": "text",
+                                "label": "Name",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "type": "text",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Query String"
+                    },
+                    {
+                        "name": "bodyType",
+                        "type": "select",
+                        "label": "Body type",
+                        "validate": {
+                            "enum": [
+                                "raw",
+                                "x_www_form_urlencoded",
+                                "multipart_form_data"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "parseResponse",
+                        "type": "boolean",
+                        "label": "Parse response",
+                        "required": true
+                    },
+                    {
+                        "name": "timeout",
+                        "type": "uinteger",
+                        "label": "Timeout",
+                        "validate": {
+                            "max": 300,
+                            "min": 1
+                        }
+                    },
+                    {
+                        "name": "shareCookies",
+                        "type": "boolean",
+                        "label": "Share cookies with other HTTP modules",
+                        "required": true
+                    },
+                    {
+                        "name": "ca",
+                        "type": "cert",
+                        "label": "Self-signed certificate"
+                    },
+                    {
+                        "name": "rejectUnauthorized",
+                        "type": "boolean",
+                        "label": "Reject connections that are using unverified (self-signed) certificates",
+                        "required": true
+                    },
+                    {
+                        "name": "followRedirect",
+                        "type": "boolean",
+                        "label": "Follow redirect",
+                        "required": true
+                    },
+                    {
+                        "name": "useQuerystring",
+                        "type": "boolean",
+                        "label": "Disable serialization of multiple same query string keys as arrays",
+                        "required": true
+                    },
+                    {
+                        "name": "gzip",
+                        "type": "boolean",
+                        "label": "Request compressed content",
+                        "required": true
+                    },
+                    {
+                        "name": "useMtls",
+                        "type": "boolean",
+                        "label": "Use Mutual TLS",
+                        "required": true
+                    },
+                    {
+                        "name": "contentType",
+                        "type": "select",
+                        "label": "Content type",
+                        "validate": {
+                            "enum": [
+                                "text/plain",
+                                "application/json",
+                                "application/xml",
+                                "text/xml",
+                                "text/html",
+                                "custom"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "data",
+                        "type": "buffer",
+                        "label": "Request content"
+                    },
+                    {
+                        "name": "followAllRedirects",
+                        "type": "boolean",
+                        "label": "Follow all redirect",
+                        "required": true
+                    }
+                ]
+            },
+            "onerror": [
+                {
+                    "id": 103,
+                    "module": "airtable:ActionCreateRecord",
+                    "version": 3,
+                    "parameters": {
+                        "base": "appyCPtzRP0Ytcz96",
+                        "table": "tblQGIqpsM1T7nf9w",
+                        "__IMTCONN__": 10478862,
+                        "useColumnId": true
+                    },
+                    "mapper": {
+                        "record": {
+                            "fldGjSduQpvbngzbe": "{{now}}",
+                            "fldJrt4MeOclnzyqF": "Gemini - Clasificar y Redactar",
+                            "fldcqoyMslPT3w65i": "{{executionId}}",
+                            "fldpUSotZdYEy0jLn": "La API de IA no respondio o devolvio un error. El lead queda en estado Error para reproceso manual.",
+                            "flduwRSTrPab3EY58": "Error API IA"
+                        }
+                    },
+                    "metadata": {
+                        "designer": {
+                            "x": 900,
+                            "y": 300
+                        }
+                    }
+                },
+                {
+                    "id": 104,
+                    "module": "airtable:ActionUpdateRecords",
+                    "version": 3,
+                    "parameters": {
+                        "base": "appyCPtzRP0Ytcz96",
+                        "table": "tblIVrXXBmktXX5Ld",
+                        "__IMTCONN__": 10478862,
+                        "useColumnId": true
+                    },
+                    "mapper": {
+                        "id": "{{2.id}}",
+                        "record": {
+                            "fldhr9Q8jr0j6Lz78": "Error"
+                        }
+                    },
+                    "metadata": {
+                        "designer": {
+                            "x": 1200,
+                            "y": 300
+                        }
+                    }
+                },
+                {
+                    "id": 105,
+                    "module": "builtin:Break",
+                    "version": 1,
+                    "metadata": {
+                        "designer": {
+                            "x": 1500,
+                            "y": 300
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "module": "json:ParseJSON",
+            "version": 1,
+            "parameters": {
+                "type": ""
+            },
+            "mapper": {
+                "json": "{{4.data.candidates[1].content.parts[1].text}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0
+                }
+            }
+        },
+        {
+            "id": 6,
+            "module": "airtable:ActionUpdateRecords",
+            "version": 3,
+            "parameters": {
+                "base": "appyCPtzRP0Ytcz96",
+                "table": "tblIVrXXBmktXX5Ld",
+                "__IMTCONN__": 10478862,
+                "useColumnId": true
+            },
+            "filter": {
+                "name": "Solo si la IA devolvio JSON valido",
+                "conditions": [
+                    [
+                        {
+                            "a": "{{5.categoria}}",
+                            "o": "exist"
+                        }
+                    ]
+                ]
+            },
+            "mapper": {
+                "id": "{{2.id}}",
+                "record": {
+                    "fld2FsjFg6r8J5mri": "{{5.respuesta}}",
+                    "fld9CsMczmDYZeS4H": "{{5.categoria}}",
+                    "fldHxvTOo1150GwIK": "{{5.justificacion}}",
+                    "fldKIp6msRgfgNNBr": "{{5.score}}",
+                    "fldhr9Q8jr0j6Lz78": "Procesado por IA"
+                }
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1500,
+                    "y": 0
+                }
+            }
+        },
+        {
+            "id": 7,
+            "module": "builtin:BasicRouter",
+            "version": 1,
+            "mapper": null,
+            "metadata": {
+                "designer": {
+                    "x": 1800,
+                    "y": 0
+                }
+            },
+            "routes": [
+                {
+                    "flow": [
+                        {
+                            "id": 8,
+                            "module": "slack:CreateMessage",
+                            "version": 4,
+                            "parameters": {
+                                "__IMTCONN__": 10479040
+                            },
+                            "filter": {
+                                "name": "Lead valido - requiere aprobacion humana",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{5.categoria}}",
+                                            "b": "Descartado",
+                                            "o": "text:notequal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "text": "*Nuevo lead esperando tu aprobacion*\n\n*Contacto:* {{1.nombre}} ({{1.email}})\n*Empresa:* {{1.empresa}}\n*Categoria:* {{5.categoria}}  |  *Score:* {{5.score}}/100\n*Servicio sugerido:* {{5.servicio_sugerido}}\n\n*Por que la IA lo clasifico asi:*\n{{5.justificacion}}\n\n*Borrador de respuesta:*\n>{{5.respuesta}}\n\nRevisalo en Airtable y cambia el Estado a *Aprobado por Humano* para que se envie, o a *Rechazado* para descartarlo.\nhttps://airtable.com/appyCPtzRP0Ytcz96/tblIVrXXBmktXX5Ld/{{2.id}}",
+                                "channel": "C0BQMGV4WDB"
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 2100,
+                                    "y": -150
+                                },
+                                "restore": {
+                                    "parameters": {
+                                        "channel": {
+                                            "label": "aprobaciones"
+                                        }
+                                    }
+                                }
+                            },
+                            "onerror": [
+                                {
+                                    "id": 106,
+                                    "module": "airtable:ActionCreateRecord",
+                                    "version": 3,
+                                    "parameters": {
+                                        "base": "appyCPtzRP0Ytcz96",
+                                        "table": "tblQGIqpsM1T7nf9w",
+                                        "__IMTCONN__": 10478862,
+                                        "useColumnId": true
+                                    },
+                                    "mapper": {
+                                        "record": {
+                                            "fldGjSduQpvbngzbe": "{{now}}",
+                                            "fldJrt4MeOclnzyqF": "Slack - Notificar Aprobacion",
+                                            "fldcqoyMslPT3w65i": "{{executionId}}",
+                                            "fldpUSotZdYEy0jLn": "No se pudo enviar la notificacion de aprobacion a Slack. El lead sigue visible en la vista de pendientes de Airtable.",
+                                            "flduwRSTrPab3EY58": "Error Gmail"
+                                        }
+                                    },
+                                    "metadata": {
+                                        "designer": {
+                                            "x": 2100,
+                                            "y": 150
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": 107,
+                                    "module": "builtin:Resume",
+                                    "version": 1,
+                                    "metadata": {
+                                        "designer": {
+                                            "x": 2400,
+                                            "y": 150
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": 9,
+                            "module": "airtable:ActionUpdateRecords",
+                            "version": 3,
+                            "parameters": {
+                                "base": "appyCPtzRP0Ytcz96",
+                                "table": "tblIVrXXBmktXX5Ld",
+                                "__IMTCONN__": 10478862,
+                                "useColumnId": true
+                            },
+                            "mapper": {
+                                "id": "{{2.id}}",
+                                "record": {
+                                    "fldhr9Q8jr0j6Lz78": "Esperando Aprobacion"
+                                }
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 2400,
+                                    "y": -150
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "flow": [
+                        {
+                            "id": 10,
+                            "module": "airtable:ActionUpdateRecords",
+                            "version": 3,
+                            "parameters": {
+                                "base": "appyCPtzRP0Ytcz96",
+                                "table": "tblIVrXXBmktXX5Ld",
+                                "__IMTCONN__": 10478862,
+                                "useColumnId": true
+                            },
+                            "filter": {
+                                "name": "Descartado - no consume canal de salida",
+                                "conditions": [
+                                    [
+                                        {
+                                            "a": "{{5.categoria}}",
+                                            "b": "Descartado",
+                                            "o": "text:equal"
+                                        }
+                                    ]
+                                ]
+                            },
+                            "mapper": {
+                                "id": "{{2.id}}",
+                                "record": {
+                                    "fldhr9Q8jr0j6Lz78": "Rechazado"
+                                }
+                            },
+                            "metadata": {
+                                "designer": {
+                                    "x": 2100,
+                                    "y": 150
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "instant": true,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": true,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us2.make.com",
+        "notes": []
+    }
+}
